@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import Header from '../components/header/Header';
+import Footer from '../components/footer/Footer';
+import My from '../components/My';
 
 const MyPage = () => {
-  // lv 5에서 사용
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
   return (
-    <div>MyPage</div>
-  )
+    <>
+      <Header />
+      <My />
+      <Footer />
+    </>
+  );
 }
 
 export default MyPage

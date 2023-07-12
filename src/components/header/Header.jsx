@@ -16,8 +16,12 @@ const Header = () => {
           <NavItem onClick={() => navigate('/abroad')}>해외</NavItem>
         </NavList>
       </Nav>
-      {/* lv5 준비 */}
-      <UserBox>{/* <User></User> */}</UserBox>
+      <UserBox>
+        <SignBox>
+          <Sign onClick={() => navigate('/signin')}>Sign In</Sign>
+          <Sign onClick={() => navigate('/signup')}>Sign Up</Sign>
+        </SignBox>
+      </UserBox>
     </HeaderLayout>
   );
 };
@@ -83,11 +87,20 @@ const UserBox = styled.div`
   width: 120px;
   height: 100%;
 `;
-const User = styled.div`
+const SignBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 70px;
+  height: 64px;
+`;
+const Sign = styled.span`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid;
-  background-color: antiquewhite;
+  font-family: 'NanumBarunGothic';
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 5px;
+  &:hover {
+    border-left: 2px solid #f26419;
+  }
 `;
