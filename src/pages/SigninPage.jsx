@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import Header from '../components/header/Header';
+import Footer from '../components/footer/Footer';
+import Signin from '../components/Signin';
 
 const SigninPage = () => {
-  // lv 5에서 사용
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
   return (
-    <div>LoginPage</div>
-  )
-}
+    <>
+      <Header />
+      <Signin />
+      <Footer />
+    </>
+  );
+};
 
-export default SigninPage
+export default SigninPage;
