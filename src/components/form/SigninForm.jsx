@@ -31,7 +31,6 @@ const SignupLayout = styled.form`
   margin-top: 120px;
   padding: 20px;
   border-radius: 8px;
-  /* border: 2px solid #f26419; */
 `;
 const InputBox = styled.div`
   display: flex;

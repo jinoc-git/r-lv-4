@@ -15,7 +15,7 @@ import editPostValidation from '../../feature/editPostValidation';
 const PostForm = ({ fnc, post }) => {
   const [pwInputOutline, postInfo, onChangeHandler] = usePostInfo();
   const [hashValue, onHashHandler, addHash, editHash] = useHashInput();
-  const [isOpen, msg, isOpenHanler] = useSystemModal();
+  const [isOpen, msg, isOpenHandler] = useSystemModal();
 
   const queryClient = useQueryClient();
   const addMutation = useMutation(addPost, {
@@ -41,7 +41,7 @@ const PostForm = ({ fnc, post }) => {
     if (post) {
       // update
       const [_, internal, __, title, artist, linkUrl, hash] = e.target;
-      if (editPostValidation(e.target, isOpenHanler)) {
+      if (editPostValidation(e.target, isOpenHandler)) {
         const checkedHash = hash.value
           .split(' ')
           .filter((h) => h !== '' && h !== '#');
@@ -60,7 +60,7 @@ const PostForm = ({ fnc, post }) => {
       }
     } else {
       // add
-      if (postValidation(postInfo, isOpenHanler, pwInputOutline)) {
+      if (postValidation(postInfo, isOpenHandler, pwInputOutline)) {
         const checkedHash = postInfo.hash.filter((h) => h !== '');
         const hash = [...checkedHash];
         const newPost = {
@@ -140,7 +140,7 @@ const PostForm = ({ fnc, post }) => {
           #해시태그는 #최소 #3개 #최대 #6개까지 #가능합니다
         </HashParagraph>
       </ButtonBox>
-      {isOpen && <SystemModal msg={msg} isOpenHanler={isOpenHanler} />}
+      {isOpen && <SystemModal msg={msg} isOpenHandler={isOpenHandler} />}
     </FormLayout>
   );
 };
