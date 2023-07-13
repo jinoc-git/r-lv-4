@@ -22,14 +22,11 @@
 
 - 회원가입
 - 로그인
+- 로그아웃
 - 게시글 작성
 - 게시글 조회
 - 게시글 수정
 - 게시글 삭제
-- 댓글 작성
-- 댓글 조회
-- 댓글 수정
-- 댓글 삭제
 
 ## API 명세
 
@@ -41,7 +38,3 @@
 | 게시글 작성  | /posts       | POST    |                                                                                                                          |
 | 게시글 수정  | /posts/id    | PATCH   |                                                                                                                          |
 | 게시글 삭제  | /posts/id    | DELETE  |                                                                                                                          |
-| 댓글 조회    | /comments    | GET     |                                                                                                                          |
-| 댓글 작성    | /comments    | POST    |                                                                                                                          |
-| 댓글 수정    | /comments/id | PATCH   |                                                                                                                          |
-| 댓글 삭제    | /comments/id | DELETE  |                                                                                                                          |
