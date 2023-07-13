@@ -3,26 +3,52 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 import { css, styled } from 'styled-components';
 import useValidationSpan from '../../feature/useValidationSpan';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
+import useSystemModal from '../../feature/useSystemModal';
+import SystemModal from '../modal/SystemModal';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const [check1, check2, check3, checkFnc] = useValidationSpan();
-  const onSubmutHandler = (e) => {
+  const [isOpen, msg, isOpenHandler] = useSystemModal();
+  const navigate = useNavigate();
+  
+  const onSubmutHandler = async (e) => {
     e.preventDefault();
-    console.log('in')
+    try {
+      const [email, password] = e.target;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email.value,
+        password.value
+      );
+      navigate('/');
+    } catch (error) {
+      if (
+        error == 'FirebaseError: Firebase: Error (auth/email-already-in-use).'
+      ) {
+        isOpenHandler(true, '이미 가입된 이메일입니다');
+      }
+    }
   };
 
   return (
     <SignupLayout onSubmit={onSubmutHandler} onChange={checkFnc}>
       <InputBox>
         <Input name={'email'} size={'medium'} bc={'#f26419'} />
-        <ValidationSpan fc={check1.isOK}>{check1.isOK ? check1.msg: '이메일 형식을 확인해 주세요'}</ValidationSpan>
+        <ValidationSpan fc={check1.isOK}>
+          {check1.msg ? check1.msg : ''}
+        </ValidationSpan>
         <Input
           name={'password'}
           type={'password'}
           size={'medium'}
           bc={'#f26419'}
         />
-        <ValidationSpan>{check2.isOK ? check2.msg : '영문 숫자 특수문자 포함 12자 이내'}</ValidationSpan>
+        <ValidationSpan fc={check2.isOK}>
+          {check2.msg ? check2.msg : ''}
+        </ValidationSpan>
         <Input
           name={'checkPassword'}
           type={'password'}
@@ -30,13 +56,20 @@ const SignupForm = () => {
           size={'medium'}
           bc={'#f26419'}
         />
-        <ValidationSpan>{check3.isOK ? check3.msg : '비밀번호가 일치하지 않습니다'}</ValidationSpan>
+        <ValidationSpan fc={check3.isOK}>
+          {check3.msg ? check3.msg : ''}
+        </ValidationSpan>
       </InputBox>
       <ButtonBox>
-        <Button w={'100%'} bc={'#222'} fc={'#fff'} disabled={check1.isOK && check2.isOK && check3.isOK}>
+        <Button
+          w={'100%'}
+          bc={'#222'}
+          fc={'#fff'}
+          disabled={check1.isOK && check2.isOK && check3.isOK}>
           회원가입
         </Button>
       </ButtonBox>
+      {isOpen && <SystemModal isOpenHandler={isOpenHandler} msg={msg} />}
     </SignupLayout>
   );
 };
@@ -48,7 +81,6 @@ const SignupLayout = styled.form`
   margin-top: 80px;
   padding: 20px;
   border-radius: 8px;
-  /* border: 2px solid #f26419; */
 `;
 const InputBox = styled.div`
   display: flex;
@@ -60,7 +92,7 @@ const ValidationSpan = styled.span`
   height: 15px;
   font-family: 'NanumBarunGothic';
   font-size: 15px;
-  color: ${({ fc }) => (fc ? 'blue' : 'red')};
+  color: ${({ fc }) => (fc ? '#4444fd' : 'red')};
 `;
 const ButtonBox = styled.div`
   width: 400px;

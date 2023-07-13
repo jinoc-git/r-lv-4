@@ -26,7 +26,14 @@ const useValidationSpan = () => {
       if (emailRegEx.test(value)) {
         setEmailValidation({ isOK: true, msg: '올바른 이메일 형식입니다' });
       } else {
-        setEmailValidation({ isOK: false, msg: '' });
+        if (value === '') {
+          setEmailValidation({ isOK: false, msg: '' });
+        } else {
+          setEmailValidation({
+            isOK: false,
+            msg: '이메일 형식을 확인해 주세요',
+          });
+        }
       }
     }
     if (name === 'password') {
@@ -37,18 +44,33 @@ const useValidationSpan = () => {
           pw: value,
         });
       } else {
-        setPwValidation({
-          isOK: false,
-          msg: '',
-          pw: value,
-        });
+        if (value === '') {
+          setPwValidation({
+            isOK: false,
+            msg: '',
+            pw: value,
+          });
+        } else {
+          setPwValidation({
+            isOK: false,
+            msg: '영문 숫자 특수문자 포함 12자 이내',
+            pw: value,
+          });
+        }
       }
     }
     if (name === 'checkPassword') {
-      if (value === pwValidatoin.pw) {
-        setCheckPwValidation({ isOK: true, msg: '비밀번호가 일치합니다' });
-      } else {
+      if (value === '') {
         setCheckPwValidation({ isOK: false, msg: '' });
+      } else {
+        if (value === pwValidatoin.pw) {
+          setCheckPwValidation({ isOK: true, msg: '비밀번호가 일치합니다' });
+        } else {
+          setCheckPwValidation({
+            isOK: false,
+            msg: '비밀번호가 일치하지 않습니다',
+          });
+        }
       }
     }
   };

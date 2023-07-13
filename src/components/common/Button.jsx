@@ -5,7 +5,11 @@ const Button = ({ children, ...props }) => {
   const { fnc, type, disabled } = props;
 
   return (
-    <Btn {...props} type={type} onClick={fnc} disabled={!disabled}>
+    <Btn
+      {...props}
+      type={type}
+      onClick={fnc}
+      disabled={disabled === false ? !disabled : false}>
       {children}
     </Btn>
   );
