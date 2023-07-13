@@ -6,7 +6,6 @@ import DetailPage from '../pages/DetailPage';
 import AbroadPage from '../pages/AbroadPage';
 import SignupPage from '../pages/SignupPage';
 import SigninPage from '../pages/SigninPage';
-import MyPage from '../pages/MyPage';
 
 const Router = () => {
   return (
@@ -18,7 +17,6 @@ const Router = () => {
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/signin" element={<SigninPage />} />
-        <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </BrowserRouter>
   );

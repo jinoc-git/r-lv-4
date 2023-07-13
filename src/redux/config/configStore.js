@@ -1,11 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import users from "../modules/usersSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import user from '../modules/userSlice';
 
 const store = configureStore({
   reducer: {
-    users,
+    user,
   },
-  devTools: process.env.NODE_ENV !== 'production'
-})
+  devTools: process.env.NODE_ENV !== 'production',
+});
 
 export default store;
