@@ -3,8 +3,6 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 import { css, styled } from 'styled-components';
 import useValidationSpan from '../../feature/useValidationSpan';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
 import { useNavigate } from 'react-router-dom';
@@ -17,19 +15,11 @@ const SignupForm = () => {
   const onSubmutHandler = async (e) => {
     e.preventDefault();
     try {
-      const [email, password] = e.target;
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email.value,
-        password.value
-      );
+      
       navigate('/');
     } catch (error) {
-      if (
-        error == 'FirebaseError: Firebase: Error (auth/email-already-in-use).'
-      ) {
-        isOpenHandler(true, '이미 가입된 이메일입니다');
-      }
+    
+      // isOpenHandler(true, '이미 가입된 이메일입니다');
     }
   };
 

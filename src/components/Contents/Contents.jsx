@@ -5,7 +5,6 @@ import Button from '../common/Button';
 import Modal from '../modal/Modal';
 import shortid from 'shortid';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
 
@@ -13,16 +12,16 @@ const Contents = ({ posts, genre, isLoading }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sysIsOpen, msg, setSysIsOpen] = useSystemModal();
   const isOpenToggleHandler = () => {
-    if (auth.currentUser) {
-      setIsOpen((prev) => !prev);
-    } else {
-      setSysIsOpen(true, '로그인이 필요합니다');
-    }
+    setIsOpen((prev) => !prev);
+    // if () {
+    // } else {
+    //   setSysIsOpen(true, '로그인이 필요합니다');
+    // }
   };
   const navigate = useNavigate();
 
   const goToDetail = () => {
-    return auth.currentUser ? true : false;
+    // return auth.currentUser ? true : false;
   };
 
   if (isLoading) {
@@ -50,11 +49,11 @@ const Contents = ({ posts, genre, isLoading }) => {
               <ContentsItem
                 key={post.id}
                 onClick={() => {
-                  if (goToDetail()) {
-                    navigate(`/detail/${post.id}`, { state: { post: post } });
-                  } else {
-                    setSysIsOpen(true, '로그인이 필요합니다');
-                  }
+                  navigate(`/detail/${post.id}`, { state: { post: post } });
+                  // if (goToDetail()) {
+                  // } else {
+                  //   setSysIsOpen(true, '로그인이 필요합니다');
+                  // }
                 }}>
                 <ContentsArtist>{post.artist}</ContentsArtist>
                 <ContentsTitle>{post.title}</ContentsTitle>

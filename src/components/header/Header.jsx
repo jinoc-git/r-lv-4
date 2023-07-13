@@ -1,8 +1,6 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
-import { auth } from '../../firebase';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -10,22 +8,11 @@ const Header = () => {
 
   useEffect(() => {
     try {
-      onAuthStateChanged(auth, async (state) => {
-        if (state) {
-          setIsLogin(true);
-        } else {
-          setIsLogin(false);
-        }
-      });
+      
     } catch (error) {
       console.log(error);
     }
   }, []);
-
-  const logoutHandler = async () => {
-    await signOut(auth);
-    setIsLogin(false);
-  };
 
   return (
     <HeaderLayout>
@@ -42,7 +29,7 @@ const Header = () => {
       <UserBox>
         <SignBox>
           {isLogin ? (
-            <Sign onClick={logoutHandler}>Log Out</Sign>
+            <Sign onClick={''}>Log Out</Sign>
           ) : (
             <>
               <Sign onClick={() => navigate('/signin')}>Sign In</Sign>
