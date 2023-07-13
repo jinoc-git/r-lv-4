@@ -1,30 +1,76 @@
-import React from 'react'
+import React from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
 import { css, styled } from 'styled-components';
+import useSystemModal from '../../feature/useSystemModal';
+import SystemModal from '../modal/SystemModal';
+import { useNavigate } from 'react-router';
+import api from '../../api/user';
+import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/modules/userSlice';
 
 const SigninForm = () => {
+  const [isOpen, msg, isOpenHandler] = useSystemModal();
+  const [cookies, setCookie] = useCookies(['token']);
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
-  const onSubmutHandler = (e) => {
+  const onSubmutHandler = async (e) => {
     e.preventDefault();
-  }
+    try {
+      const [email, password] = e.target;
+      if (email.value === '') {
+        isOpenHandler(true, '이메일을 입력해 주세요');
+        return false;
+      }
+      if (password.value === '') {
+        isOpenHandler(true, '비밀번호를 입력해 주세요');
+        return false;
+      }
+      
+      const userInfo = {
+        id: email.value,
+        password: password.value,
+      };
+
+      const res = await api.post('/login', userInfo);
+      const token = res.data.token;
+      setCookie('token', token, { path: '/' });
+      dispatch(loginUser({is: true}));
+      navigate('/');
+    } catch (error) {
+      if (error === '존재하지 않는 유저입니다.') {
+        isOpenHandler(true, '이메일을 확인해 주세요');
+      }
+      if (error === '비밀번호가 일치하지 않습니다.') {
+        isOpenHandler(true, '비밀번호를 확인해 주세요');
+      }
+    }
+  };
 
   return (
     <SignupLayout onSubmit={onSubmutHandler}>
       <InputBox>
         <Input name={'email'} size={'medium'} bc={'#f26419'} />
-        <Input name={'password'} type={'password'} size={'medium'} bc={'#f26419'} />
+        <Input
+          name={'password'}
+          type={'password'}
+          size={'medium'}
+          bc={'#f26419'}
+        />
       </InputBox>
       <ButtonBox>
-        <Button w={'100%'} bc={'#222'} fc={'#fff'}>
+        <Button w={'100%'} bc={'#222'} fc={'#fff'} type={'submit'}>
           로그인
         </Button>
       </ButtonBox>
+      {isOpen && <SystemModal isOpenHandler={isOpenHandler} msg={msg} />}
     </SignupLayout>
-  )
-}
+  );
+};
 
-export default SigninForm
+export default SigninForm;
 
 const SignupLayout = styled.form`
   width: 440px;

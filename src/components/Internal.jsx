@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from './layout/Layout';
 import Contents from './Contents/Contents';
-import SearchForm from './form/SearchForm';
 import { useQuery } from '@tanstack/react-query';
 import { getPosts } from '../api/post';
 import { styled } from 'styled-components';
@@ -37,7 +36,6 @@ const Internal = () => {
 
   return (
     <Layout>
-      {/* <SearchForm /> */}
       <Contents posts={data} genre={'internal'} />
       {showTopBtn && (
         <TopBtnBox>

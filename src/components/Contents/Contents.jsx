@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { css, styled } from 'styled-components';
 import randomColor from '../../feature/randomColor';
 import Button from '../common/Button';
@@ -7,21 +7,60 @@ import shortid from 'shortid';
 import { useNavigate } from 'react-router-dom';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
+import { useCookies } from 'react-cookie';
+import api from '../../api/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/modules/userSlice';
 
 const Contents = ({ posts, genre, isLoading }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [sysIsOpen, msg, setSysIsOpen] = useSystemModal();
-  const isOpenToggleHandler = () => {
-    setIsOpen((prev) => !prev);
-    // if () {
-    // } else {
-    //   setSysIsOpen(true, '로그인이 필요합니다');
-    // }
-  };
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const isLogin = useSelector((state) => state.user.is);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //  로그인 상태에서 쿠키를 직접 바꾸거나 삭제해도 공유하기 기능이 작동..
+  // const curToken = cookies.token;
+  // const checkToken = async (cur) => {
+  //   try {
+  //     const res = await api.get('/user', {
+  //       headers: {
+  //         Authorization: `Bearer ${cur}`,
+  //       },
+  //     });
+  //     const { status } = res;
+  //     if (status === 200) {
+  //       console.log('in');
+  //       dispatch(loginUser({ is: true }));
+  //       return true;
+  //     } else {
+  //       dispatch(loginUser({ is: false }));
+  //       removeCookie(['token']);
+  //       setIsOpen(false);
+  //       setSysIsOpen(true, '로그인이 필요합니다');
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     dispatch(loginUser({ is: false }));
+  //     removeCookie(['token']);
+  //     navigate('/signin');
+  //     setSysIsOpen(true, '로그인이 필요합니다');
+  //     setIsOpen(false);
+  //     return false;
+  //   }
+  // };
 
-  const goToDetail = () => {
-    // return auth.currentUser ? true : false;
+  const isOpenToggleHandler = () => {
+    if (
+      // checkToken(curToken)
+      isLogin
+    ) {
+      setIsOpen((prev) => !prev);
+    } else {
+      setSysIsOpen(true, '로그인이 필요합니다');
+      removeCookie(['token']);
+      navigate('/signin');
+    }
   };
 
   if (isLoading) {
@@ -48,13 +87,9 @@ const Contents = ({ posts, genre, isLoading }) => {
             return (
               <ContentsItem
                 key={post.id}
-                onClick={() => {
-                  navigate(`/detail/${post.id}`, { state: { post: post } });
-                  // if (goToDetail()) {
-                  // } else {
-                  //   setSysIsOpen(true, '로그인이 필요합니다');
-                  // }
-                }}>
+                onClick={() =>
+                  navigate(`/detail/${post.id}`, { state: { post: post } })
+                }>
                 <ContentsArtist>{post.artist}</ContentsArtist>
                 <ContentsTitle>{post.title}</ContentsTitle>
                 <HashBox>

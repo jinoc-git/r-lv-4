@@ -1,25 +1,30 @@
 import React from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import useValidationSpan from '../../feature/useValidationSpan';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/user'
 
 const SignupForm = () => {
   const [check1, check2, check3, checkFnc] = useValidationSpan();
   const [isOpen, msg, isOpenHandler] = useSystemModal();
   const navigate = useNavigate();
-  
+
   const onSubmutHandler = async (e) => {
     e.preventDefault();
     try {
-      
-      navigate('/');
+      const [email, password] = e.target;
+      const newUser = {
+        id: email.value,
+        password: password.value,
+      };
+      const res = await api.post('/register', newUser);
+      navigate('/signin');
     } catch (error) {
-    
-      // isOpenHandler(true, '이미 가입된 이메일입니다');
+      isOpenHandler(true, '이미 가입된 이메일입니다');
     }
   };
 
