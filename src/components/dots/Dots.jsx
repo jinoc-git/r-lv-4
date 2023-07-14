@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 
-const Dots = ({ post, isOpenHandler, setType, setInput }) => {
+const Dots = ({ isOpenHandler, setType, setInput }) => {
   const [isOpen, setIsOpen] = useState(false);
   const otpIsOpenHandler = () => {
     setIsOpen(true);

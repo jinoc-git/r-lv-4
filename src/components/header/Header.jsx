@@ -1,63 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
-import { useCookies } from 'react-cookie';
 import api from '../../api/user';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
-import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/modules/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { __checkToken, signoutUser } from '../../redux/modules/userSlice';
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const user = useSelector((state) => state.user);
   const [isOpen, msg, isOpenHandler] = useSystemModal();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const curToken = cookies.token;
-    const path = window.location.pathname;
-    const checkToken = async (cur) => {
-      try {
-        if (cur === undefined) {
-          if (path !== '/signin' && path !== '/signup') {
-            navigate('/signin');
-          }
-        } else {
-          const res = await api.get('/user', {
-            headers: {
-              Authorization: `Bearer ${cur}`,
-            },
-          });
-          const { status } = res;
-          if (status === 200) {
-            setIsLogin(true);
-            dispatch(loginUser({ is: true }));
-          } else {
-            setIsLogin(false);
-            dispatch(loginUser({ is: false }));
-            removeCookie(['token']);
-            isOpenHandler(true, '로그인이 필요합니다');
-          }
-        }
-      } catch (error) {
-        setIsLogin(false);
-        dispatch(loginUser({ is: false }));
-        removeCookie(['token']);
-        if (path !== '/signin' && path !== '/signup') {
-          navigate('/signin');
-          isOpenHandler(true, '로그인이 필요합니다');
-        }
-      }
-    };
-    checkToken(curToken);
+    dispatch(__checkToken());
   }, []);
 
   const logout = () => {
-    setIsLogin(false);
-    dispatch(loginUser({ is: false }));
-    removeCookie(['token']);
+    dispatch(signoutUser());
+    navigate('/signin');
   };
 
   return (
@@ -74,7 +36,7 @@ const Header = () => {
       </Nav>
       <UserBox>
         <SignBox>
-          {isLogin ? (
+          {user.is ? (
             <Sign onClick={logout}>Log Out</Sign>
           ) : (
             <>

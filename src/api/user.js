@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router';
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_MOCK_SERVER_URL

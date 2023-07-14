@@ -1,20 +1,18 @@
 import React from 'react';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import useSystemModal from '../../feature/useSystemModal';
 import SystemModal from '../modal/SystemModal';
 import { useNavigate } from 'react-router';
 import api from '../../api/user';
-import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/modules/userSlice';
+import { signinUser } from '../../redux/modules/userSlice';
 
 const SigninForm = () => {
   const [isOpen, msg, isOpenHandler] = useSystemModal();
-  const [cookies, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const onSubmutHandler = async (e) => {
     e.preventDefault();
@@ -28,7 +26,7 @@ const SigninForm = () => {
         isOpenHandler(true, '비밀번호를 입력해 주세요');
         return false;
       }
-      
+
       const userInfo = {
         id: email.value,
         password: password.value,
@@ -36,8 +34,8 @@ const SigninForm = () => {
 
       const res = await api.post('/login', userInfo);
       const token = res.data.token;
-      setCookie('token', token, { path: '/' });
-      dispatch(loginUser({is: true}));
+      const newUser = { is: true, token }
+      dispatch(signinUser(newUser));
       navigate('/');
     } catch (error) {
       if (error === '존재하지 않는 유저입니다.') {
