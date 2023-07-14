@@ -30,7 +30,7 @@
 ## API 명세
 
 |    기능      | URL          | Method  | request                                | response                                       |
-| ------------ | ------------ | ------- | ---------------------------------------------------------------------------------------- |
+| ------------ | ------------ | ------- | ---------------------------------------------------------------------------------------- |--------------------------- |
 | 게시글 조회  | /posts       | GET     |                                       | [ {"id": id, "artist": "artist", "title": "title","genre": "genre","password": "password","linkUrl": "linkUrl","hash": []} ] |
 | 게시글 작성  | /posts       | POST    |  {"id": id, "artist": "artist", "title": "title","genre": "genre","password": "password","linkUrl": "linkUrl","hash": []}   |     |
 | 게시글 수정  | /posts/id    | PATCH   |    {"id": id, "artist": "artist", "title": "title","genre": "genre","password": "password","linkUrl": "linkUrl","hash": []}    |     |
