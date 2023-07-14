@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import { createPortal } from 'react-dom';
 import Button from '../common/Button';
 import Input from '../common/Input';
