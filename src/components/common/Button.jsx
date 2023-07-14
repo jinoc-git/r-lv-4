@@ -2,9 +2,14 @@ import React from 'react';
 import { css, styled } from 'styled-components';
 
 const Button = ({ children, ...props }) => {
-  const { fnc, type } = props;
+  const { fnc, type, disabled } = props;
+
   return (
-    <Btn {...props} type={type} onClick={fnc}>
+    <Btn
+      {...props}
+      type={type}
+      onClick={fnc}
+      disabled={disabled === false ? !disabled : false}>
       {children}
     </Btn>
   );
@@ -16,10 +21,18 @@ const Btn = styled.button`
   cursor: pointer;
   border: none;
   color: ${({ fc }) => fc};
-  &:hover {
-    color: #F26419;
-  }
   background-color: ${({ bc }) => bc};
+  &:hover {
+    color: #f26419;
+  }
+  &:disabled {
+    background-color: #888;
+    &:hover {
+      cursor: not-allowed;
+      color: #fff;
+    }
+  }
+
   ${({ size }) => {
     switch (size) {
       case 'small':
@@ -52,10 +65,10 @@ const Btn = styled.button`
         `;
     }
   }}
-  ${({w, h}) => {
+  ${({ w, h }) => {
     return css`
       width: ${w};
       height: ${h};
-    `
+    `;
   }}
 `;

@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from 'styled-components';
+import api from '../../api/user';
+import useSystemModal from '../../feature/useSystemModal';
+import SystemModal from '../modal/SystemModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { __checkToken, signoutUser } from '../../redux/modules/userSlice';
 
 const Header = () => {
+  const user = useSelector((state) => state.user);
+  const [isOpen, msg, isOpenHandler] = useSystemModal();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(__checkToken());
+  }, []);
+
+  const logout = () => {
+    dispatch(signoutUser());
+    navigate('/signin');
+  };
+
   return (
     <HeaderLayout>
       <LogoBox>
@@ -16,8 +34,19 @@ const Header = () => {
           <NavItem onClick={() => navigate('/abroad')}>해외</NavItem>
         </NavList>
       </Nav>
-      {/* lv5 준비 */}
-      <UserBox>{/* <User></User> */}</UserBox>
+      <UserBox>
+        <SignBox>
+          {user.is ? (
+            <Sign onClick={logout}>Log Out</Sign>
+          ) : (
+            <>
+              <Sign onClick={() => navigate('/signin')}>Sign In</Sign>
+              <Sign onClick={() => navigate('/signup')}>Sign Up</Sign>
+            </>
+          )}
+        </SignBox>
+      </UserBox>
+      {isOpen && <SystemModal isOpenHandler={isOpenHandler} msg={msg} />}
     </HeaderLayout>
   );
 };
@@ -83,11 +112,20 @@ const UserBox = styled.div`
   width: 120px;
   height: 100%;
 `;
-const User = styled.div`
+const SignBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 70px;
+  height: 64px;
+`;
+const Sign = styled.span`
   cursor: pointer;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid;
-  background-color: antiquewhite;
+  font-family: 'NanumBarunGothic';
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 5px;
+  &:hover {
+    border-left: 2px solid #f26419;
+  }
 `;

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
 
-const Dots = ({ post, isOpenHanler, setType, setInput }) => {
+const Dots = ({ isOpenHandler, setType, setInput }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const isOpenHandler = () => {
+  const otpIsOpenHandler = () => {
     setIsOpen(true);
   };
 
   return (
     <DotAreaBox>
-      <DotsWrapperBtn onClick={isOpenHandler} onBlur={() => setIsOpen(false)}>
+      <DotsWrapperBtn onClick={otpIsOpenHandler} onBlur={() => setIsOpen(false)}>
         <DotSpan />
         <DotSpan />
         <DotSpan />
@@ -18,7 +18,7 @@ const Dots = ({ post, isOpenHanler, setType, setInput }) => {
         <OptionsList>
           <OptionItem
             onMouseDown={() => {
-              isOpenHanler(true, '비밀번호를 입력해 주세요');
+              isOpenHandler(true, '비밀번호를 입력해 주세요');
               setType('edit');
               setInput(true);
             }}>
@@ -26,7 +26,7 @@ const Dots = ({ post, isOpenHanler, setType, setInput }) => {
           </OptionItem>
           <OptionItem
             onMouseDown={() => {
-              isOpenHanler(true, '비밀번호를 입력해 주세요');
+              isOpenHandler(true, '비밀번호를 입력해 주세요');
               setType('delete');
               setInput(true);
             }}>

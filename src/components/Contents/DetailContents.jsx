@@ -9,31 +9,41 @@ import SystemModal from '../modal/SystemModal';
 import Modal from '../modal/Modal';
 import { useQuery } from '@tanstack/react-query';
 import { getPosts } from '../../api/post';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const DetailContents = ({ post }) => {
   const { isLoading, data } = useQuery(['posts'], getPosts);
   const matchPost = data.find((a) => a.id === post.id);
   const { title, artist, hash, linkUrl, password } = matchPost;
-  const [systemIsOpen, msg, isOpenHanler] = useSystemModal();
+
+  const [systemIsOpen, msg, isOpenHandler] = useSystemModal();
   const [input, setInput] = useState(true);
   const [type, setType] = useState('');
   const [editIsOpen, setEditIsOpen] = useState(false);
 
+  const navigate = useNavigate();
+  const isLogin = useSelector((state) => state.user);
+
+  if (isLogin.is === false) {
+    navigate('/signin');
+  }
+
   const controlPost = (value, type) => {
     if (type === 'cancle') {
-      isOpenHanler(false, '비밀번호를 입력해 주세요');
+      isOpenHandler(false, '비밀번호를 입력해 주세요');
       return false;
     }
     if (password !== value) {
-      isOpenHanler(true, '비밀번호가 틀립니다');
+      isOpenHandler(true, '비밀번호가 틀립니다');
       return false;
     }
     if (type === 'edit') {
-      isOpenHanler(false);
+      isOpenHandler(false);
       setEditIsOpen(true);
     }
     if (type === 'delete') {
-      isOpenHanler(true, '정말 삭제하시겠습니까?');
+      isOpenHandler(true, '정말 삭제하시겠습니까?');
       setInput(false);
     }
   };
@@ -54,7 +64,7 @@ const DetailContents = ({ post }) => {
           <DetailTitle>{title}</DetailTitle>
           <Dots
             post={matchPost}
-            isOpenHanler={isOpenHanler}
+            isOpenHandler={isOpenHandler}
             setType={setType}
             setInput={setInput}
           />
@@ -73,7 +83,7 @@ const DetailContents = ({ post }) => {
         <SystemModal
           msg={msg}
           input={input}
-          isOpenHanler={isOpenHanler}
+          isOpenHandler={isOpenHandler}
           controlPost={controlPost}
           type={type}
           id={matchPost.id}

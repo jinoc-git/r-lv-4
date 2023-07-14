@@ -1,17 +1,31 @@
 import React, { useState } from 'react';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import randomColor from '../../feature/randomColor';
 import Button from '../common/Button';
 import Modal from '../modal/Modal';
 import shortid from 'shortid';
 import { useNavigate } from 'react-router-dom';
+import useSystemModal from '../../feature/useSystemModal';
+import SystemModal from '../modal/SystemModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { __checkToken } from '../../redux/modules/userSlice';
 
 const Contents = ({ posts, genre, isLoading }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const isOpenToggleHandler = () => {
-    setIsOpen((prev) => !prev);
-  };
+  const [sysIsOpen, msg, setSysIsOpen] = useSystemModal();
+  const isLogin = useSelector((state) => state.user.is);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isOpenToggleHandler = () => {
+    dispatch(__checkToken());
+    if (isLogin) {
+      setIsOpen((prev) => !prev);
+    } else {
+      setSysIsOpen(true, '로그인이 필요합니다');
+      navigate('/signin');
+    }
+  };
 
   if (isLoading) {
     return <div>로딩중</div>;
@@ -37,9 +51,14 @@ const Contents = ({ posts, genre, isLoading }) => {
             return (
               <ContentsItem
                 key={post.id}
-                onClick={() =>
-                  navigate(`/detail/${post.id}`, { state: { post: post } })
-                }>
+                onClick={() => {
+                  dispatch(__checkToken());
+                  if (isLogin) {
+                    navigate(`/detail/${post.id}`, { state: { post: post } });
+                  } else {
+                    navigate('/signin');
+                  }
+                }}>
                 <ContentsArtist>{post.artist}</ContentsArtist>
                 <ContentsTitle>{post.title}</ContentsTitle>
                 <HashBox>
@@ -52,6 +71,9 @@ const Contents = ({ posts, genre, isLoading }) => {
           })}
       </ContentsList>
       {isOpen && <Modal fnc={isOpenToggleHandler} />}
+      {sysIsOpen && (
+        <SystemModal isOpenHandler={setSysIsOpen} msg={msg} login={true} />
+      )}
     </ContentsLayout>
   );
 };

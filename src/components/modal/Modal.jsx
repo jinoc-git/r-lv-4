@@ -2,12 +2,20 @@ import React, { useEffect } from 'react';
 import { styled } from 'styled-components';
 import PostForm from '../form/PostForm';
 import { createPortal } from 'react-dom';
+import { useSelector } from 'react-redux';
 
 const Modal = ({ fnc, post }) => {
+  const isLogin = useSelector((state) => state.user.is);
+
   useEffect(() => {
     document.body.style = 'overflow: hidden';
     return () => (document.body.style = 'overflow: auto');
   });
+
+  if (isLogin === false) {
+    fnc();
+  }
+
   return createPortal(
     <ModalLayout>
       <ModalBox post={post}>
@@ -37,7 +45,7 @@ const ModalBox = styled.div`
   transform: translate(-50%, -50%);
   width: 40%;
   max-width: 580px;
-  height: ${({post}) => post ? '320px' : '360px'};
+  height: ${({ post }) => (post ? '320px' : '360px')};
   padding: 20px;
   border-radius: 12px;
   background-color: #fff;

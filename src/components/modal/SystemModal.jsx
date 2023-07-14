@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { css, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import { createPortal } from 'react-dom';
 import Button from '../common/Button';
 import Input from '../common/Input';
@@ -8,7 +8,8 @@ import { deletePost } from '../../api/post';
 import { useNavigate } from 'react-router-dom';
 
 const SystemModal = (props) => {
-  const { msg, isOpenHanler, input, controlPost, type, id } = props;
+  const { msg, isOpenHandler, input, controlPost, type, id, login } = props;
+
   const navigate = useNavigate();
   useEffect(() => {
     document.body.style = 'overflow: hidden';
@@ -23,15 +24,19 @@ const SystemModal = (props) => {
     },
   });
   const confirmBtnHandler = () => {
+    if (login) {
+      isOpenHandler(false);
+      navigate('/signin');
+    }
     if (!input) {
-      isOpenHanler(false);
+      isOpenHandler(false);
     }
     if (input && type === 'delete') {
       const val = checkInput.current.value;
       controlPost(val, 'delete');
     }
     if (!input && msg === '정말 삭제하시겠습니까?') {
-      isOpenHanler(false);
+      isOpenHandler(false);
       mutation.mutate(id);
       navigate('/');
     }
